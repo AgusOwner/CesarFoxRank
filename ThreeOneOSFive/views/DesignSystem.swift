@@ -1,14 +1,20 @@
 import SwiftUI
 
 enum AppTheme {
+    // Verde oscuro, más cerca del negro
     static let accent = Color(
-        uiColor: UIColor(red: 0.90, green: 0.12, blue: 0.16, alpha: 1.00)
+        uiColor: UIColor(red: 0.06, green: 0.66, blue: 0.23, alpha: 1.00)
     )
+    // Color de texto/íconos para poner SOBRE el verde
+    static let onAccent = Color(
+        uiColor: UIColor(red: 0.00, green: 0.05, blue: 0.02, alpha: 1.00)
+    )
+    // Fondos casi negros con un tono verde muy suave
     static let pageBackground = Color(
-        uiColor: UIColor(red: 0.047, green: 0.012, blue: 0.016, alpha: 1.00)
+        uiColor: UIColor(red: 0.004, green: 0.020, blue: 0.008, alpha: 1.00)
     )
     static let consoleBackground = Color(
-        uiColor: UIColor(red: 0.098, green: 0.027, blue: 0.035, alpha: 1.00)
+        uiColor: UIColor(red: 0.012, green: 0.055, blue: 0.024, alpha: 1.00)
     )
     static let pageInset: CGFloat = 16
     static let rowIconSize: CGFloat = 17
@@ -104,22 +110,34 @@ struct AppLogo: View {
 
     var body: some View {
         Group {
-            if let icon = UIImage(named: "AppIcon60x60")
-                ?? Bundle.main.path(forResource: "AppIcon60x60@2x", ofType: "png").flatMap(UIImage.init(contentsOfFile:))
-                ?? UIImage(named: "AppIcon") {
-                Image(uiImage: icon)
+            if let logo = UIImage(named: "FoxRankLogo") {
+                Image(uiImage: logo)
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
+                    .frame(width: size, height: size)
             } else {
-                Image(systemName: "slider.horizontal.3")
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(AppTheme.accent)
+                legacyIcon
+                    .frame(width: size, height: size)
+                    .clipShape(RoundedRectangle(cornerRadius: size * 0.22, style: .continuous))
             }
         }
-        .frame(width: size, height: size)
-        .clipShape(RoundedRectangle(cornerRadius: size * 0.22, style: .continuous))
         .accessibilityHidden(true)
+    }
+
+    @ViewBuilder
+    private var legacyIcon: some View {
+        if let icon = UIImage(named: "AppIcon60x60")
+            ?? Bundle.main.path(forResource: "AppIcon60x60@2x", ofType: "png").flatMap(UIImage.init(contentsOfFile:))
+            ?? UIImage(named: "AppIcon") {
+            Image(uiImage: icon)
+                .resizable()
+                .scaledToFill()
+        } else {
+            Image(systemName: "slider.horizontal.3")
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(AppTheme.onAccent)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(AppTheme.accent)
+        }
     }
 }
